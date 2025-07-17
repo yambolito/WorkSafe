@@ -1,4 +1,4 @@
-header.php: <?php
+ <?php
 // common/header.php
 ?>
 <!DOCTYPE html>
