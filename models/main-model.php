@@ -1,4 +1,5 @@
  <?php 
+ require_once './library/conections.php';
 function buildNavList($navs) {
     $navList = '<ul>';
     

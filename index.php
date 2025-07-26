@@ -3,6 +3,7 @@
 require_once './library/conections.php';
 require_once './library/nav.php';
 require_once './models/main-model.php';
+require_once './models/personal_mode.php';
 
 $navs = getNavs();
 $navList = buildNavList($navs);
@@ -15,10 +16,13 @@ $navList = buildNavList($navs);
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 
 switch ($action) {
-    case 'Add Personal':
-        include './views/add_personal.php';
+    case 'stadistics':
+        include './views/statistics.php';
         break;
-    case 'Search Personal':
+    case 'Add Personal':
+        include './views/addPerson.php';
+        break;
+    case 'Search':
         include './views/search.php';
         break;
     case 'Login':
