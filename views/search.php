@@ -1,141 +1,128 @@
 <?php include $_SERVER['DOCUMENT_ROOT'] . "/worksafe/common/header.php"; ?>
 
-
 <form id="searchForm" method="GET" action="./search/index.php">
-    <label for="nombre">Buscar por nombre:</label>
+    <label for="nombre">Search by name:</label>
     <input type="text" id="nombre" name="nombre">
 
-    <label for="area_trabajo">Buscar por área de trabajo:</label>
+    <label for="area_trabajo">Search by work area:</label>
     <input type="text" id="area_trabajo" name="area_trabajo">
 
-    <input type="submit" value="Buscar">
+    <input type="submit" value="Search">
 </form><br><br>
 
 <div id="personList" class="person-list">
     <?php
-    // Array para mapear las siglas a los nombres completos
+    // Array to map abbreviations to full names
     $nombres_completos = array(
-        'Cs' => 'Casco Seguridad',
-        'Oc' => 'orejeras_casco',
-        'Ov' => 'orejeras_vincha',
-        'Gbd' => 'guantes_badana',
-        'Zp' => 'zapato_seguridad',
-        'Ga' => 'guantes_anticorte',
-        'Gc' => 'guantes_cuero',
-        'Gac' => 'guantes_acido_n',
-        'Mp' => 'guantes_limpieza',
-        'Gs' => 'guantes_soldar',
-        'Cas' => 'casco_soldar',
-        'Cms' => 'camisa_soldar',
-        'Hs' => 'hombrera_soldar',
-        'Ms' => 'mandil_soldar',
-        'Bs' => 'botas_soldar',
-        'Ls' => 'lentes_seguridad',
-        'Pf' => 'protector_facial',
-        'Fc' => 'faja_carga',
-        'Lg' => 'lentes_google',
-        'R3m' => 'respirador_3m',
-        'Vo' => 'filtro_vapor_org',
-        'Fp' => 'filtro_paticulas',
-        'Ta' => 'traje_acido',
-        'Chc' => 'chompa_camara',
-        'Pc' => 'pantalon_camara',
-        'Mc' => 'medias_camara',
-        'Pm' => 'pasamontaña',
-        'Cam' => 'guantes_camara',
-        'Tc' => 'traje_camara',
-        'Bb' => 'bota_blancas',
-        'U' => 'uniforme_produccion',
-        'Ua' => 'uniforme_almacen',
-        'Ul' => 'uniforme_limpieza',
-        'Zc' => 'zapato_camara',
-        'Um' => 'Uniforme_matenimiento',
-        'Bp' => 'botas_punta',
-        'Tv' => 'traje_tyvek',
-        // Agrega más si es necesario
+        'Cs' => 'Safety Helmet',
+        'Oc' => 'Helmet Earmuffs',
+        'Ov' => 'Headband Earmuffs',
+        'Gbd' => 'Badana Gloves',
+        'Zp' => 'Safety Shoes',
+        'Ga' => 'Cut-resistant Gloves',
+        'Gc' => 'Leather Gloves',
+        'Gac' => 'Acid-resistant Gloves',
+        'Mp' => 'Cleaning Gloves',
+        'Gs' => 'Welding Gloves',
+        'Cas' => 'Welding Helmet',
+        'Cms' => 'Welding Shirt',
+        'Hs' => 'Welding Shoulder Pads',
+        'Ms' => 'Welding Apron',
+        'Bs' => 'Welding Boots',
+        'Ls' => 'Safety Glasses',
+        'Pf' => 'Face Shield',
+        'Fc' => 'Lifting Belt',
+        'Lg' => 'Goggles',
+        'R3m' => '3M Respirator',
+        'Vo' => 'Organic Vapor Filter',
+        'Fp' => 'Particle Filter',
+        'Ta' => 'Acid Suit',
+        'Chc' => 'Cold Room Jacket',
+        'Pc' => 'Cold Room Pants',
+        'Mc' => 'Cold Room Socks',
+        'Pm' => 'Balaclava',
+        'Cam' => 'Cold Room Gloves',
+        'Tc' => 'Cold Room Suit',
+        'Bb' => 'White Boots',
+        'U' => 'Production Uniform',
+        'Ua' => 'Warehouse Uniform',
+        'Ul' => 'Cleaning Uniform',
+        'Zc' => 'Cold Room Shoes',
+        'Um' => 'Maintenance Uniform',
+        'Bp' => 'Steel Toe Boots',
+        'Tv' => 'Tyvek Suit',
     );
 
-    // Verificar si se ha enviado el formulario y si hay resultados para mostrar
+    // Check if the form has been submitted and if there are results to display
     if (!empty($personas)) {
         echo '<div class="marco">';
-        echo '<h2>Resultados de la búsqueda</h2>';
+        echo '<h2>Search Results</h2>';
         echo '<ul id="personListUl">';
-        // Mostrar los resultados
         foreach ($personas as $persona) {
             $persona['firmar'] = 'data:image/jpeg;base64,' . $persona['firmar'];
-            // Verificar si la persona tiene al menos un equipo de seguridad asignado
             $tiene_epp = false;
             foreach ($persona as $key => $value) {
                 if ((strpos($key, 'fecha_entrega_') !== false || strpos($key, 'cambio_') !== false) && $value !== '0000-00-00' && $value !== '0') {
                     $tiene_epp = true;
-                    break; // Salir del bucle una vez que se haya encontrado al menos un equipo de seguridad asignado
+                    break;
                 }
             }
-            // Mostrar la persona solo si tiene al menos un equipo de seguridad asignado
             if ($tiene_epp) {
                 echo '<li>';
                 echo '<div class="photo">';
                 echo '<img src="' . $persona['foto'] . '" alt="' . $persona['name'] . '">';
                 echo '</div>';
-                // Mostrar solo una vez el nombre y la información general
                 echo '<span>';
-                echo 'Estado: <span class="' . ($persona['estado'] === 'activo' ? 'estado-activo' : 'estado-retirado') . '">' . $persona['estado'] . '</span><br>';
-                echo 'Nombre: ' . $persona['name'] . '<br>';
-                echo 'Edad: ' . $persona['edad'] . '<br>';
-                echo 'Ocupación: ' . $persona['ocupacion'] . '<br>';
+                echo 'Status: <span class="' . ($persona['estado'] === 'activo' ? 'estado-activo' : 'estado-retirado') . '">' . $persona['estado'] . '</span><br>';
+                echo 'Name: ' . $persona['name'] . '<br>';
+                echo 'Age: ' . $persona['edad'] . '<br>';
+                echo 'Occupation: ' . $persona['ocupacion'] . '<br>';
                 echo 'Area: ' . $persona['area_trabajo'] . '<br>';
-                echo 'Sede: ' . $persona['sede'] . '<br>';
-                echo 'Fecha de ingreso: ' . $persona['fecha_ingreso'] . '<br>';
-                echo 'Fecha de cumpleaños: ' . $persona['fecha_cumple'] . '<br>';
+                echo 'Location: ' . $persona['sede'] . '<br>';
+                echo 'Date of Entry: ' . $persona['fecha_ingreso'] . '<br>';
+                echo 'Birthday: ' . $persona['fecha_cumple'] . '<br>';
                 echo '</span>';
                 echo '<span>';
-                echo '<h2> Equipos de Seguridad </h2>';
+                echo '<h2> Safety Equipment </h2>';
                 echo '</span>';
-                echo 'Estado de EPP: <span class="' . ($persona['estado_epp'] === 'devuelto' ? 'estado_epp_devuelto' : ($persona['estado_epp'] === 'activo' ? 'estado_epp_activos' : '')) . '">' . $persona['estado_epp'] . '</span><br>';
+                echo 'PPE Status: <span class="' . ($persona['estado_epp'] === 'devuelto' ? 'estado_epp_devuelto' : ($persona['estado_epp'] === 'activo' ? 'estado_epp_activos' : '')) . '">' . $persona['estado_epp'] . '</span><br>';
+                echo 'Observations: ' . $persona['observaciones']. '<br>','<br>';
 
-                echo 'Observaciones: ' . $persona['observaciones']. '<br>','<br>';
+                $mostrado = [];
 
-                // Mostrar los campos dinámicos de los checkboxes y las fechas
-                $mostrado = []; // Array para almacenar los elementos mostrados
-
-                // Mostrar los campos dinámicos de los checkboxes y las fechas
                 foreach ($persona as $key => $value) {
-                    // Verificar si el campo tiene una fecha de entrega o un cambio, y si es mayor o igual a 1 o diferente de "0000-00-00" o "0"
                     if ((strpos($key, 'fecha_entrega_') !== false || strpos($key, 'cambio_') !== false) && $value !== '0000-00-00' && $value !== '0' && !empty($value)) {
                         $epp_nombre = ucwords(str_replace('', ' ', str_replace(['fecha_entrega_', 'cambio_'], '', $key)));
-                        // Si existe el nombre completo en el array, lo mostramos, de lo contrario, mostramos la sigla
                         if (array_key_exists($epp_nombre, $nombres_completos)) {
                             $epp_nombre_completo = $nombres_completos[$epp_nombre];
-                            // Verificar si ya se ha mostrado este elemento
                             if (!in_array($epp_nombre_completo, $mostrado)) {
                                 echo $epp_nombre_completo . ':<br>';
-                                echo 'Fecha de Entrega: ' . $value . '<br>';
-                                // Marcar como mostrado para evitar la repetición
+                                echo 'Delivery Date: ' . $value . '<br>';
                                 $cambio_key = str_replace('fecha_entrega_', 'cambio_', $key);
-                                echo 'Fecha de Cambio: ' . $persona[$cambio_key] . '<br>';
-                                $mostrado[] = $epp_nombre_completo; // Agregar al array de elementos mostrados
+                                echo 'Replacement Date: ' . $persona[$cambio_key] . '<br>';
+                                $mostrado[] = $epp_nombre_completo;
                             }
                         }
                     }
                 }
                 echo '<br>';
-                 echo '<h2>Firma</h2>';
-                 echo '<br>';
-                echo '<td><img clas="firma" src="' . htmlspecialchars($persona['firmar']) . '" alt="Firma" /></td>';
+                echo '<h2>Signature</h2>';
                 echo '<br>';
-                echo '<td><img src="data:image/png;base64,' . htmlspecialchars($persona['foto_captura']) . '" alt="Última Foto" width="300" height="225"></td>';
-                echo '<h2>Foto evidencia</h2>';
-                echo 'Fecha de firma: ' . htmlspecialchars($persona['fecha']) . '<br>';
+                echo '<td><img class="firma" src="' . htmlspecialchars($persona['firmar']) . '" alt="Signature" /></td>';
+                echo '<br>';
+                echo '<td><img src="data:image/png;base64,' . htmlspecialchars($persona['foto_captura']) . '" alt="Last Photo" width="300" height="225"></td>';
+                echo '<h2>Evidence Photo</h2>';
+                echo 'Signature Date: ' . htmlspecialchars($persona['fecha']) . '<br>';
                 echo '</li>';
             }
         }
         echo '</ul>';
         echo '</div>';
         if ($_SESSION['clientData']['clientLevel'] == 3 || $_SESSION['clientData']['clientLevel'] == 4) {
-            echo '<a href="../views/mpersonal.php?id=' . $persona['id'] . '" class="btn-modificar">Modificar Datos</a>';
+            echo '<a href="../views/mpersonal.php?id=' . $persona['id'] . '" class="btn-modificar">Modify Data</a>';
         }
     } else {
-        echo '<p>No se encontraron resultados para la búsqueda.</p>';
+        echo '<p>No results found for the search.</p>';
     }
     ?>
 </div>
